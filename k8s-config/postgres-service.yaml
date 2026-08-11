@@ -1,0 +1,16 @@
+# Initial config
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: demo-app-prod
+spec:
+  selector:
+    app: postgres
+
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
+
+  type: ClusterIP
