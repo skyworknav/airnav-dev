@@ -1,13 +1,16 @@
+# Initial config
 apiVersion: v1
 kind: Service
 metadata:
-  name: new-app-svc
-  namespace: demo-app #change this
+  name: demo-app
+  namespace: demo-app-prod
 spec:
-  type: NodePort
   selector:
-    app: new-app          
+    app: demo-app
+
   ports:
-  - port: 80              
-    targetPort: 3001      
-    nodePort: 30092       
+    - protocol: TCP
+      port: 80
+      targetPort: <APP_PORT> 
+
+  type: ClusterIP
