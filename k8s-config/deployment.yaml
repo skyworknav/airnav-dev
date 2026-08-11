@@ -1,43 +1,58 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: new-app
-  namespace: demo-app #Partial namespace for demo app
+  name: demo-app
+  namespace: demo-app-prod
 spec:
   replicas: 2
+
   selector:
     matchLabels:
-      app: new-app                     # matches template labels below (valid)
+      app: demo-app
+
   template:
     metadata:
       labels:
-        app: new-app
+        app: demo
+        -app
+
     spec:
       containers:
-      - name: new-app
-        image: 192.168.10.23:5000/new-app:v1.0.3 #change this to new image
-        imagePullPolicy: IfNotPresent
-        ports:
-        - containerPort: 3001
-        env:
-        - name: PORT
-          value: "3001"
-        resources:
-          requests:
-            cpu: 100m
-            memory: 64Mi
-          limits:
-            cpu: 100m
-            memory: 128Mi   # was 20Mi - kubectl top + dmesg showed real usage ~19Mi with zero headroom, causing OOMKilled
-        livenessProbe:
-          httpGet:
-            path: /health               
-            port: 3001                   
-          initialDelaySeconds: 5
-          periodSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 3001                   #match the container port
-          initialDelaySeconds: 3
-          periodSeconds: 10
+        - name: demo-app
+          image: <APP_IMAGE>
+
+          ports:
+            - containerPort: <APP_PORT>
+
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+
+          env:
+            - name: DB_HOST
+              value: postgres
+
+            - name: DB_PORT
+              value: "5432"
+
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: DB_NAME
+
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: DB_USER
+
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: DB_PASSWORD
