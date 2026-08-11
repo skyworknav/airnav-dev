@@ -1,8 +1,10 @@
+# Initial configs not final
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: login-app
-  namespace: startup
+  namespace: demo-app-prod
 spec:
   replicas: 2
 
@@ -55,4 +57,3 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: DB_PASSWORD
-
