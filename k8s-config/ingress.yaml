@@ -8,7 +8,7 @@ spec:
   ingressClassName: traefik
 
   rules:
-    - host: login-staging.<DOMAIN>
+    - host: cicde-demo-staging.192.168.8.121.nip.io
       http:
         paths:
           - path: /
@@ -16,6 +16,6 @@ spec:
 
             backend:
               service:
-                name: login-app
+                name: cicd-demo-app
                 port:
                   number: 80
