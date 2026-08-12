@@ -1,10 +1,9 @@
-# Initial configs not final
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cicd-demo-app
   namespace: demo-app-staging
+
 spec:
   replicas: 2
 
@@ -20,40 +19,40 @@ spec:
     spec:
       containers:
         - name: cicd-demo-app
-          image: 192.168.10.23:5000/cide-demo-app:staging-a3ffa0a
+
+          image: 192.168.10.23:5000/cicd-demo-app:staging-a3ffa0a
 
           ports:
             - containerPort: 3000
+
+          env:
+            - name: PORT
+              value: "3000"
+
+            - name: ENVIRONMENT
+              value: "staging"
+
+            - name: APP_VERSION
+              value: "staging-a3ffa0a"
+
+            # PostgreSQL - PLACEHOLDERS
+            # These will be configured when the
+            # centralized PostgreSQL server exists.
+
+            - name: PGHOST
+              value: "<POSTGRES_HOST>"
+
+            - name: PGPORT
+              value: "5432"
+
+            - name: PGDATABASE
+              value: "<STAGING_DATABASE>"
 
           resources:
             requests:
               cpu: "250m"
               memory: "256Mi"
+
             limits:
               cpu: "500m"
               memory: "512Mi"
-
-          env:
-            - name: DB_HOST
-              value: postgres
-
-            - name: DB_PORT
-              value: "5432"
-
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: DB_NAME
-
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: DB_USER
-
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: DB_PASSWORD
