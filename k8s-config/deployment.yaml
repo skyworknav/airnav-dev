@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -37,18 +36,36 @@ spec:
             - name: APP_VERSION
               value: "staging-a3ffa0a"
 
-            # PostgreSQL - PLACEHOLDERS
-            # These will be configured when the
-            # centralized PostgreSQL server exists.
-
+            # PostgreSQL
             - name: PGHOST
-              value: "<POSTGRES_HOST>"
+              valueFrom:
+                secretKeyRef:
+                  name: cicd-staging-db
+                  key: PGHOST
 
             - name: PGPORT
-              value: "5432"
+              valueFrom:
+                secretKeyRef:
+                  name: cicd-staging-db
+                  key: PGPORT
 
             - name: PGDATABASE
-              value: "<STAGING_DATABASE>"
+              valueFrom:
+                secretKeyRef:
+                  name: cicd-staging-db
+                  key: PGDATABASE
+
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: cicd-staging-db
+                  key: PGUSER
+
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cicd-staging-db
+                  key: PGPASSWORD
 
           resources:
             requests:
