@@ -1,3 +1,4 @@
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -21,6 +22,7 @@ spec:
         - name: cicd-demo-app
 
           image: 192.168.10.23:5000/cicd-demo-app:staging-a3ffa0a
+          imagePullPolicy: IfNotPresent
 
           ports:
             - containerPort: 3000
@@ -56,3 +58,17 @@ spec:
             limits:
               cpu: "500m"
               memory: "512Mi"
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 3000
+            initialDelaySeconds: 3
+            periodSeconds: 10
