@@ -1,6 +1,6 @@
-
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: cicd-demo-app
   namespace: demo-app-prod
@@ -37,18 +37,27 @@ spec:
             - name: APP_VERSION
               value: "v1.0.3"
 
-            # PostgreSQL - PLACEHOLDERS
-            # These will be configured when the
-            # centralized PostgreSQL server exists.
-
+            # PostgreSQL
             - name: PGHOST
-              value: "<POSTGRES_HOST>"
+              value: "192.168.8.199"
 
             - name: PGPORT
               value: "5432"
 
             - name: PGDATABASE
-              value: "<PRODUCTION_DATABASE>"
+              value: "cicd_production"
+
+            - name: PGUSER
+              valueFrom:
+                secretKeyRef:
+                  name: cicd-production-db
+                  key: username
+
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cicd-production-db
+                  key: password
 
           resources:
             requests:
@@ -72,4 +81,3 @@ spec:
               port: 3000
             initialDelaySeconds: 3
             periodSeconds: 10
-
