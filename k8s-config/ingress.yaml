@@ -7,7 +7,7 @@ spec:
   ingressClassName: traefik
 
   rules:
-    - host: demoapp-prod.<DOMAIN>
+    - host: cicd-demo-prod.192.168.8.121.nip.io
       http:
         paths:
           - path: /
