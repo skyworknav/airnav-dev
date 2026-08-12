@@ -1,16 +1,16 @@
-# Initial config
 apiVersion: v1
 kind: Service
 metadata:
-  name: demo-app
+  name: cicd-demo-app
   namespace: demo-app-prod
+
 spec:
   selector:
-    app: demo-app
+    app: cicd-demo-app
 
   ports:
     - protocol: TCP
       port: 80
-      targetPort: <APP_PORT> 
+      targetPort: 3000
 
   type: ClusterIP
