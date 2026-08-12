@@ -14,6 +14,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: demo-app
+                name: cicd-demo-app
                 port:
                   number: 80
