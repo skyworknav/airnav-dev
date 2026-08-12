@@ -1,58 +1,60 @@
-# Initial config
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo-app
+  name: cicd-demo-app
   namespace: demo-app-prod
+
 spec:
   replicas: 2
 
   selector:
     matchLabels:
-      app: demo-app
+      app: cicd-demo-app
 
   template:
     metadata:
       labels:
-        app: demo-app
+        app: cicd-demo-app
 
     spec:
       containers:
-        - name: demo-app
-          image: 192.168.10.23:5000/cicd-demo-app # Initial config
+        - name: cicd-demo-app
+
+          # PLACEHOLDER
+          # Replace with the production image
+          # created by Jenkins.
+          image: 192.168.10.23:5000/cicd-demo-app:<PRODUCTION_TAG>
 
           ports:
-            - containerPort: <APP_PORT> #No config yet
+            - containerPort: 3000
+
+          env:
+            - name: PORT
+              value: "3000"
+
+            - name: ENVIRONMENT
+              value: "production"
+
+            # Replace after Jenkins creates the
+            # actual production image tag.
+            - name: APP_VERSION
+              value: "<PRODUCTION_TAG>"
+
+            # PostgreSQL - PLACEHOLDERS
+            - name: PGHOST
+              value: "<POSTGRES_HOST>"
+
+            - name: PGPORT
+              value: "5432"
+
+            - name: PGDATABASE
+              value: "<PRODUCTION_DATABASE>"
 
           resources:
             requests:
               cpu: "250m"
               memory: "256Mi"
+
             limits:
               cpu: "500m"
               memory: "512Mi"
-
-          env:
-            - name: DB_HOST
-              value: postgres
-
-            - name: DB_PORT
-              value: "5432"
-
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: DB_NAME
-
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: DB_USER
-
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: DB_PASSWORD
