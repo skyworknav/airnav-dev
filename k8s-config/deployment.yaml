@@ -3,27 +3,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo-app
+  name: cicd-demo-app
   namespace: demo-app-staging
 spec:
   replicas: 2
 
   selector:
     matchLabels:
-      app: login-app
+      app: cicd-demo-app
 
   template:
     metadata:
       labels:
-        app: login-app
+        app: cicd-demo-app
 
     spec:
       containers:
-        - name: login-app
-          image: 192.168.10.23:5000/cide-demo-app
+        - name: cicd-demo-app
+          image: 192.168.10.23:5000/cide-demo-app:staging-a3ffa0a
 
           ports:
-            - containerPort: <APP_PORT>
+            - containerPort: 3000
 
           resources:
             requests:
