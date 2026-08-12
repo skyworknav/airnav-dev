@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: demo-app
+  name: cicd-demo-app
   namespace: demo-app-prod
 spec:
   ingressClassName: traefik
