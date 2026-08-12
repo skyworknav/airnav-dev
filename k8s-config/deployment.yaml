@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cicd-demo-app
-  namespace: startup-prod
+  namespace: demo-app-prod
 
 spec:
   replicas: 2
