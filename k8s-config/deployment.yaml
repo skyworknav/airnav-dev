@@ -29,7 +29,7 @@ spec:
       containers:
         - name: cicd-demo-app
 
-          image: 192.168.10.23:5000/cicd-demo-app:production-10a3298
+          image: 192.168.10.23:5000/cicd-demo-app:v1.0.0
           imagePullPolicy: IfNotPresent
 
           ports:
