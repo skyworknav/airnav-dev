@@ -1,11 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
-
+kind: StatefulSet
 metadata:
   name: cicd-demo-app
   namespace: demo-app-prod
 
 spec:
+  serviceName: cicd-demo-app
   replicas: 2
 
   selector:
@@ -18,14 +18,23 @@ spec:
         app: cicd-demo-app
 
     spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: cicd-demo-app
+
       containers:
         - name: cicd-demo-app
 
-          image: 192.168.10.23:5000/cicd-demo-app:v1.0.0
+          image: 192.168.10.23:5000/cicd-demo-app:production-10a3298
           imagePullPolicy: IfNotPresent
 
           ports:
-            - containerPort: 3000
+            - name: http
+              containerPort: 3000
 
           env:
             - name: PORT
@@ -35,29 +44,32 @@ spec:
               value: "production"
 
             - name: APP_VERSION
-              value: "v1.0.3"
+              value: "production-a3ffa0a"
 
             # PostgreSQL
             - name: PGHOST
-              value: "192.168.8.199"
+              value: "postgres"
 
             - name: PGPORT
               value: "5432"
 
             - name: PGDATABASE
-              value: "cicd_production"
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_DB
 
             - name: PGUSER
               valueFrom:
                 secretKeyRef:
-                  name: cicd-production-db
-                  key: username
+                  name: postgres-secret
+                  key: POSTGRES_USER
 
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: cicd-production-db
-                  key: password
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
 
           resources:
             requests:
