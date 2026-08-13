@@ -18,10 +18,18 @@ spec:
         app: cicd-demo-app
 
     spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: cicd-demo-app
+
       containers:
         - name: cicd-demo-app
 
-          image: 192.168.10.23:5000/cicd-demo-app:staging-460a086
+          image: 192.168.10.23:5000/cicd-demo-app:staging-10a3298
           imagePullPolicy: IfNotPresent
 
           ports:
@@ -37,9 +45,6 @@ spec:
 
             - name: APP_VERSION
               value: "staging-a3ffa0a"
-
-            - name: MAX_QUEUE
-              value: "10"
 
             # PostgreSQL
             - name: PGHOST
