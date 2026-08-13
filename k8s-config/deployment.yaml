@@ -1,10 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: cicd-demo-app
   namespace: demo-app-staging
 
 spec:
+  serviceName: cicd-demo-app
   replicas: 2
 
   selector:
@@ -24,7 +25,8 @@ spec:
           imagePullPolicy: IfNotPresent
 
           ports:
-            - containerPort: 3000
+            - name: http
+              containerPort: 3000
 
           env:
             - name: PORT
@@ -36,36 +38,33 @@ spec:
             - name: APP_VERSION
               value: "staging-a3ffa0a"
 
+            - name: MAX_QUEUE
+              value: "10"
+
             # PostgreSQL
             - name: PGHOST
-              valueFrom:
-                secretKeyRef:
-                  name: cicd-staging-db
-                  key: PGHOST
+              value: "postgres"
 
             - name: PGPORT
-              valueFrom:
-                secretKeyRef:
-                  name: cicd-staging-db
-                  key: PGPORT
+              value: "5432"
 
             - name: PGDATABASE
               valueFrom:
                 secretKeyRef:
-                  name: cicd-staging-db
-                  key: PGDATABASE
+                  name: postgres-secret
+                  key: POSTGRES_DB
 
             - name: PGUSER
               valueFrom:
                 secretKeyRef:
-                  name: cicd-staging-db
-                  key: PGUSER
+                  name: postgres-secret
+                  key: POSTGRES_USER
 
             - name: PGPASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: cicd-staging-db
-                  key: PGPASSWORD
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
 
           resources:
             requests:
