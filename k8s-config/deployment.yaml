@@ -36,40 +36,9 @@ spec:
             - name: http
               containerPort: 3000
 
-          env:
-            - name: PORT
-              value: "3000"
-
-            - name: ENVIRONMENT
-              value: "production"
-
-            - name: APP_VERSION
-              value: "production-a3ffa0a"
-
-            # PostgreSQL
-            - name: PGHOST
-              value: "postgres"
-
-            - name: PGPORT
-              value: "5432"
-
-            - name: PGDATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_DB
-
-            - name: PGUSER
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_USER
-
-            - name: PGPASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-secret
-                  key: POSTGRES_PASSWORD
+          envFrom:
+            - secretRef:
+                name: postgres-secret
 
           resources:
             requests:
