@@ -1,12 +1,12 @@
 apiVersion: apps/v1
-kind: StatefulSet
+kind: Deployment
 metadata:
   name: cicd-demo-app
   namespace: demo-app-staging
 
 spec:
-  serviceName: cicd-demo-app
   replicas: 2
+
 
   selector:
     matchLabels:
